@@ -1,0 +1,26 @@
+name: Deploy to DreamHost
+
+on:
+  push:
+    branches: [ "master", "main" ]  # deixe só a(s) branch(es) que você realmente usa
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Pacote de deploy (opcional, aqui é direto da raiz do repo)
+      - name: Upload via SFTP
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+        with:
+          server: ${{ secrets.DH_HOST }}        # host do servidor (ex.: iad1-shared-e1-31.dreamhost.com)
+          username: ${{ secrets.DH_USER }}      # seu usuário DreamHost (weslley)
+          password: ${{ secrets.DH_PASS }}      # sua senha SFTP/SSH
+          local_path: './'                      # envia tudo da raiz do repo
+          remote_path: '/home/weslley/api.wm.dev.br'  # AJUSTE se for diferente
+          exclude: |
+            **/.git*
+            **/.github*
+            **/node_modules/**
