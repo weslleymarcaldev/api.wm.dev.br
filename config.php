@@ -14,28 +14,29 @@ foreach (file($envFile) as $line) {
     $v = trim($v, " \t\n\r\0\x0B'\"");    // tira aspas e espaços
     $_ENV[$k] = $v; 
 }
+$_ENV['DB_PORT'] = $_ENV['DB_PORT'] ?? '3306';
 
-// Validar variáveis obrigatórias
-$required = ['DB_HOST', 'DB_NAME', 'DB_USER', 'DB_PASS'];
-foreach ($required as $key) {
-    if (empty($_ENV[$key])) {
-        die("Erro: Variável {$key} não encontrada no .env");
-    }
+foreach (['DB_HOST','DB_NAME','DB_USER','DB_PASS'] as $key) {
+    if (empty($_ENV[$key])) die("Erro: Variável {$key} não encontrada no .env");
 }
 
-// Conectar PDO
+$dsn = "mysql:host={$_ENV['DB_HOST']};port={$_ENV['DB_PORT']};dbname={$_ENV['DB_NAME']};charset=utf8mb4";
+
 try {
+    // DEBUG opcional (comente em produção):
+    // fwrite(STDERR, "Conectando com DSN: $dsn\n");
+
     $pdo = new PDO(
-        "mysql:host={$_ENV['DB_HOST']};port={$_ENV['DB_PORT']};dbname={$_ENV['DB_NAME']};charset=utf8mb4",
+        $dsn,
         $_ENV['DB_USER'],
         $_ENV['DB_PASS'],
         [
-            PDO::ATTR_ERRMODE               => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE    => PDO::FETCH_ASSOC,
-            PDO::ATTR_TIMEOUT               => 5,
+            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_TIMEOUT            => 5,
         ]
     );
-// Teste de conexão
+
     echo "✅ Conexão OK com MySQL via .env";
 } catch (PDOException $e) {
     die("❌ Erro de conexão: " . $e->getMessage());
