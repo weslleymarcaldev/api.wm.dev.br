@@ -1,19 +1,24 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-br" data-bs-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark">
   <title>API de Estudo</title>
+
   <!-- Bootstrap 5 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body { padding: 24px; }
-    pre { white-space: pre-wrap; word-break: break-word; }
+    pre { background: var(--bs-tertiary-bg); padding: 1rem; border-radius: .5rem; }
   </style>
 </head>
-<body class="bg-light">
+<body class="bg-body">
   <div class="container">
-    <h1 class="mb-4">API - wm.dev.br</h1>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h1 class="m-0">API - wm.dev.br</h1>
+      <button id="themeToggle" class="btn btn-outline-secondary">🌙 Dark</button>
+    </div>
 
     <!-- Abas -->
     <ul class="nav nav-tabs" id="apiTabs" role="tablist">
@@ -78,80 +83,32 @@
         <pre id="outSum" class="mb-0"></pre>
       </div>
     </div>
+    <pre id="demo">Tema ativo aqui acompanha o Bootstrap</pre>
   </div>
 
-  <!-- Bootstrap 5 JS (sem jQuery) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
   <script>
-    const API = 'api.php'; // ou 'https://api.wm.dev.br/api.php'
+    const htmlEl = document.documentElement;
+    const btn = document.getElementById('themeToggle');
 
-    const outPing = document.getElementById('outPing');
-    const outEcho = document.getElementById('outEcho');
-    const outSum  = document.getElementById('outSum');
-
-    // Util: exibir JSON bonito
-    function showJSON(el, data) {
-      el.textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+    // Tema inicial: localStorage ou preferencia do sistema
+    function getPreferredTheme() {
+      const saved = localStorage.getItem('theme');
+      if (saved) return saved;
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     }
 
-    // Ping
-    document.getElementById('btnPing').addEventListener('click', async () => {
-      try {
-        const res = await fetch(`${API}?r=/ping`);
-        const data = await res.json();
-        showJSON(outPing, data);
-      } catch (e) {
-        showJSON(outPing, String(e));
-      }
-    });
+    function applyTheme(t) {
+      htmlEl.setAttribute('data-bs-theme', t);
+      btn.textContent = t === 'dark' ? '☀️ Light' : '🌙 Dark';
+      localStorage.setItem('theme', t);
+    }
 
-    // Echo (POST)
-    document.getElementById('formEcho').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      try {
-        const bodyText = document.getElementById('echoBody').value;
-        const parsed = bodyText ? JSON.parse(bodyText) : {};
-        const res = await fetch(`${API}?r=/echo`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(parsed)
-        });
-        const data = await res.json();
-        showJSON(outEcho, data);
-      } catch (e2) {
-        showJSON(outEcho, String(e2));
-      }
-    });
+    applyTheme(getPreferredTheme());
 
-    // Soma GET
-    document.getElementById('btnSumGet').addEventListener('click', async () => {
-      const a = document.getElementById('sumA').value;
-      const b = document.getElementById('sumB').value;
-      try {
-        const res = await fetch(`${API}?r=/sum&a=${encodeURIComponent(a)}&b=${encodeURIComponent(b)}`);
-        const data = await res.json();
-        showJSON(outSum, data);
-      } catch (e) {
-        showJSON(outSum, String(e));
-      }
-    });
-
-    // Soma POST
-    document.getElementById('btnSumPost').addEventListener('click', async () => {
-      const a = parseFloat(document.getElementById('sumA').value);
-      const b = parseFloat(document.getElementById('sumB').value);
-      try {
-        const res = await fetch(`${API}?r=/sum`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ a, b })
-        });
-        const data = await res.json();
-        showJSON(outSum, data);
-      } catch (e) {
-        showJSON(outSum, String(e));
-      }
+    btn.addEventListener('click', () => {
+      const next = htmlEl.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
     });
   </script>
 </body>
