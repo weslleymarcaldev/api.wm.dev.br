@@ -48,10 +48,15 @@
       <div class="tab-pane fade" id="echo" role="tabpanel" aria-labelledby="echo-tab">
         <form id="formEcho" class="row g-3">
           <div class="col-12">
-            <label class="form-label">JSON para enviar</label>
-            <textarea class="form-control" id="echoBody" rows="4"> 
-{ "msg": "Olá, API!", "user": "Wes" }
-            </textarea>
+            <label for="echoBody" class="form-label">JSON para enviar</label>
+            <textarea
+              class="form-control"
+              id="echoBody"
+              name="echoBody"
+              rows="5"
+              aria-describedby="echoHelp"
+              placeholder='{"msg":"Olá, API!","user":"Wes"}'></textarea>
+            <div id="echoHelp" class="form-text">Envie um JSON válido; o /echo devolverá o mesmo conteúdo.</div>
           </div>
           <div class="col-12 d-flex gap-2 align-items-end">
             <button class="btn btn-success" type="submit">POST /echo</button>
