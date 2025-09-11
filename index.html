@@ -92,27 +92,74 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    const htmlEl = document.documentElement;
-    const btn = document.getElementById('themeToggle');
+    const API = 'api.php'; // ou 'https://api.wm.dev.br/api.php'
 
-    // Tema inicial: localStorage ou preferencia do sistema
-    function getPreferredTheme() {
-      const saved = localStorage.getItem('theme');
-      if (saved) return saved;
-      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    const outPing = document.getElementById('outPing');
+    const outEcho = document.getElementById('outEcho');
+    const outSum  = document.getElementById('outSum');
+
+    // Util: exibir JSON bonito
+    function showJSON(el, data) {
+      el.textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
     }
 
-    function applyTheme(t) {
-      htmlEl.setAttribute('data-bs-theme', t);
-      btn.textContent = t === 'dark' ? '☀️ Clarear' : '🌙 Escurecer';
-      localStorage.setItem('theme', t);
-    }
+    // Ping
+    document.getElementById('btnPing').addEventListener('click', async () => {
+      try {
+        const res = await fetch(`${API}?r=/ping`);
+        const data = await res.json();
+        showJSON(outPing, data);
+      } catch (e) {
+        showJSON(outPing, String(e));
+      }
+    });
 
-    applyTheme(getPreferredTheme());
+    // Echo (POST)
+    document.getElementById('formEcho').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      try {
+        const bodyText = document.getElementById('echoBody').value;
+        const parsed = bodyText ? JSON.parse(bodyText) : {};
+        const res = await fetch(`${API}?r=/echo`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(parsed)
+        });
+        const data = await res.json();
+        showJSON(outEcho, data);
+      } catch (e2) {
+        showJSON(outEcho, String(e2));
+      }
+    });
 
-    btn.addEventListener('click', () => {
-      const next = htmlEl.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
-      applyTheme(next);
+    // Soma GET
+    document.getElementById('btnSumGet').addEventListener('click', async () => {
+      const a = document.getElementById('sumA').value;
+      const b = document.getElementById('sumB').value;
+      try {
+        const res = await fetch(`${API}?r=/sum&a=${encodeURIComponent(a)}&b=${encodeURIComponent(b)}`);
+        const data = await res.json();
+        showJSON(outSum, data);
+      } catch (e) {
+        showJSON(outSum, String(e));
+      }
+    });
+
+    // Soma POST
+    document.getElementById('btnSumPost').addEventListener('click', async () => {
+      const a = parseFloat(document.getElementById('sumA').value);
+      const b = parseFloat(document.getElementById('sumB').value);
+      try {
+        const res = await fetch(`${API}?r=/sum`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ a, b })
+        });
+        const data = await res.json();
+        showJSON(outSum, data);
+      } catch (e) {
+        showJSON(outSum, String(e));
+      }
     });
   </script>
 </body>
