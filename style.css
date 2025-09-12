@@ -1,0 +1,8 @@
+body {
+  padding: 24px;
+}
+pre {
+  background: var(--bs-tertiary-bg);
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
