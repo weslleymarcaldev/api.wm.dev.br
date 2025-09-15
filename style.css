@@ -1,10 +1,13 @@
 body {
-    padding: 24px !important;
-    background-color: aqua !important;
-}
-pre {
-    background: var(--bs-tertiary-bg) !important;
-    padding: 1rem !important;
-    border-radius: 0.5rem !important;
+    padding: 24px;                       /* espaçamento fixo da página */
+    background-color: var(--bs-body-bg); /* muda com o tema (light/dark) */
+    color: var(--bs-body-color);         /* garante contraste correto */
 }
 
+pre {
+    background-color: var(--bs-tertiary-bg); /* acompanha o tema */
+    padding: 1rem;
+    border-radius: .5rem;
+    /* opcional: borda suave para separar do fundo */
+    /* border: 1px solid rgba(0,0,0,.06); no light ou use utilitário do Bootstrap no HTML */
+}
