@@ -1,4 +1,4 @@
-body {
+body .bg-body {
     padding: 24px;                       /* espaçamento fixo da página */
     background-color: var(--bs-body-bg); /* muda com o tema (light/dark) */
     color: var(--bs-body-color);         /* garante contraste correto */
