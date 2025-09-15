@@ -1,10 +1,10 @@
 body {
-    padding: 24px;
-    background-color: aqua;
+    padding: 24px !important;
+    background-color: aqua !important;
 }
 pre {
-    background: var(--bs-tertiary-bg);
-    padding: 1rem;
-    border-radius: 0.5rem;
+    background: var(--bs-tertiary-bg) !important;
+    padding: 1rem !important;
+    border-radius: 0.5rem !important;
 }
 
