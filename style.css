@@ -1,4 +1,4 @@
-body .bg-body {
+body {
     padding: 24px;                       /* espaçamento fixo da página */
     background-color: var(--bs-body-bg); /* muda com o tema (light/dark) */
     color: var(--bs-body-color);         /* garante contraste correto */
@@ -10,4 +10,14 @@ pre {
     border-radius: .5rem;
     /* opcional: borda suave para separar do fundo */
     /* border: 1px solid rgba(0,0,0,.06); no light ou use utilitário do Bootstrap no HTML */
+}
+:root[data-bs-theme="light"] {
+    --bs-body-bg: #f8fafc;         /* fundo claro que você quiser */
+    --bs-body-color: #0f172a;
+    --bs-tertiary-bg: #eef2f7;
+}
+:root[data-bs-theme="dark"] {
+    --bs-body-bg: #0f1115;         /* fundo escuro */
+    --bs-body-color: #e5e7eb;
+    --bs-tertiary-bg: #1a1f2b;
 }
